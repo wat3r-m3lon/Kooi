@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  kooi.webapi:
+    container_name: Kooi.WebAPI
+    image: ${DOCKER_REGISTRY-}kooiwebapi
+    build:
+      context: .
+      dockerfile: Kooi.WebAPI/Dockerfile
+    ports:
+        - "5000:443"
+    depends_on:
+        - kooi.database
+
+  kooi.database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports: 
+      - "5002:1433"
+    environment:
+      ACCEPT_EULA: "y"
+      SA_PASSWORD: KooeeAnu233
+    volumes:
+      - mssql_data:/var/opt/mssql  
+
+  # kooi.database:
+  #   container_name: Kooi.Database
+  #   build:
+  #     context: .
+  #     dockerfile: Kooi.Database/Dockerfile
+  #   environment:
+  #       MSSQL_SA_PASSWORD: KooeeAnu233
+  #   volumes:
+  #       - db-data:/var/opt/mssql      
+  #   ports:
+  #       - "1003:1003"
+
+  # kooi.frontend:
+  #   container_name: Kooi.Frontend
+  #   build:
+  #     context: .
+  #     dockerfile: Kooi.Frontend/Dockerfile
+  #   volumes:
+  #     - ./src:/app
+  #     - /app/node_modules
+  #   ports:
+  #     - '8080:80'
+
+volumes:
+  mssql_data:
